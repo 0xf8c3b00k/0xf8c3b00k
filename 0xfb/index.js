@@ -12,6 +12,8 @@ var CONFIG = require('./config.js').app_config();
 // function would be program option, while the second one would be
 // command argument. Move to ./config.js ?
 var progCommand = {
+  // Post message
+  'post' : './post.js',
   // Update photo
   'uploadphoto' : './upload_photo.js',
   'album' : './album.js'
@@ -25,6 +27,10 @@ var handleSetting = function(progOpt, command, cmdArg) {
 
 // Parse command line, collect program option, command, command argrment.
 var initRun = function() {
+  // [TODO] we can use Optimist to simplify command line arguments
+  //        parse. Refer to:
+  //          * https://github.com/substack/node-optimist
+  //          * http://docs.nodejitsu.com/articles/command-line/how-to-parse-command-line-arguments
 
   var program_option = [];
   var command = '';

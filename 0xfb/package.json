@@ -1,4 +1,21 @@
 {
- "name": "0xfb",
- "version": "0.0.1",
+  "name": "0xfb",
+  "version": "0.0.1",
+  "dependencies": {
+  },
+  "maintainers":[
+    {
+      "name": "Posh Hsu",
+      // "email": "billblogs@bblogmedia.com",
+      // "web": "http://www.bblogmedia.com",
+    },
+    {
+      "name": "kk1fff",
+      "email": "p@m.patrickz.net",
+    } 
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/0xf8c3b00k/0xf8c3b00k.git"
+  }
 }

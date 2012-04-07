@@ -11,7 +11,7 @@ var app_cfg = {
 
   // Server side path to the file that contains html data to request a fb
   // token.
-  'fb_authclient_servpath' : './oauth_page.html',
+  'fb_authclient_servpath' : __dirname + '/oauth_page.html',
 
   // Facebook app id.
   'fb_client_id' : '370477596318204',

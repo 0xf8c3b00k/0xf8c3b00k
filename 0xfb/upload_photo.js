@@ -1,6 +1,7 @@
 var https = require('https');
 var http = require('http');
 var crypto = require('crypto');
+var fs = require('fs');
 var USERCONFIG = require('./config.js').user_config();
 
 var fieldMapper = {
@@ -22,7 +23,19 @@ var makePostData = function(cfg) {
   return kvp.join('&');
 }
 
-var uploadStdin = function(config) {
+var uploadFromFile = function(cb, filename, config) {
+  uploadToWebsite(cb,
+                  config,
+                  fs.createReadStream(filename),
+                  filename);
+}
+
+var uploadStdin = function(cb, config) {
+  process.stdin.resume();
+  uploadToWebsite(cb, config, process.stdin, '1.jpg');
+}
+
+var uploadToWebsite = function(cb, config, istream, filename) {
 
   var uploadPath = !config.hasOwnProperty('albumId') ?
     '/me/photos' : '/' + config['albumId'] + '/photos';
@@ -63,7 +76,7 @@ var uploadStdin = function(config) {
     });
 
     resp.on('end', function() {
-      process.exit(0);
+      cb();
     });
   });
 
@@ -80,40 +93,59 @@ var uploadStdin = function(config) {
 
   // Here we start to redirect data to server.
   req.write('--' + multipartBoundary + '\r\n');
-  req.write('Content-Disposition: form-data; name="image"; filename="1.jpg"\r\n');
+  req.write('Content-Disposition: form-data; name="image"; filename="' + filename + '"\r\n');
   req.write('Content-Type: image/jpeg\r\n');
   req.write('\r\n');
 
   // Read from stdin until reach end.
-  process.stdin.resume();
-  process.stdin.on('data', function(d) {
+  istream.on('data', function(d) {
     req.write(d);
   });
-  process.stdin.on('end', function() {
+
+  istream.on('end', function() {
     req.write('\r\n--' + multipartBoundary + '--\r\n');
     req.end();
   });
 };
+
+var upload = function(cb, cfg) {
+  // Disable debug message.
+  // console.log("config:");
+  // console.log(JSON.stringify(cfg));
+
+   if (cfg.hasOwnProperty('filename')) {
+     var count = 0;
+     cfg['filename'].forEach(function(v) {
+       uploadFromFile(function() {
+         count++;
+         if (count == cfg['filename'].length) {
+           cb();
+         }
+       }, v, cfg);
+     });
+   } else {
+     // from standard in.
+     uploadStdin(cb, cfg);
+   }
+}
 
 exports.run = function(progOpt, cmdArgs) {
   var expecting = 'key';
   var key = ''
   var parsed = {};
   for (var i = 0; i < cmdArgs.length; ++i) {
+    var v = cmdArgs[i];
     if (expecting == 'key') {
-      expecting = 'value';
-      key = cmdArgs[i];
-    } else {
-      // If this key expects value.
-      if ((key == '--albumId')
-          || (key == '--msg')
-          || (key == '-m')) {
-        parsed[key] = cmdArgs[i];
-        expecting = 'key';
-      } else {
-        parsed[key] = '';
-        key = cmdArgs[i];
+      if ((v == '--album')
+          || (v == '--msg')
+          || (v == '-m')) {
+        expecting = 'value';
+        key = v;
       }
+      parsed[v] = '';
+    } else {
+      parsed[key] = v;
+      expecting = 'key';
     }
   }
 
@@ -123,8 +155,16 @@ exports.run = function(progOpt, cmdArgs) {
       cfg['albumId'] = parsed[v];
     } else if (v == '--msg' || v == '-m') {
       cfg['message'] = parsed[v];
+    } else {
+      if (cfg.hasOwnProperty('filename')) {
+        cfg['filename'].push(v);
+      } else {
+        cfg['filename'] = [v];
+      }
     }
   });
-
-  uploadStdin(cfg);
+  
+  upload.bind(this, function() {
+    process.exit(0);
+  })(cfg);
 }

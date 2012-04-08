@@ -7,7 +7,7 @@ var USERCONFIG  = require('./config.js').user_config(),
 var post = function(program_option, command_argument, raw_argv) {
 
   var argv = optimist(raw_argv)
-               .usage("Example: ./index.js post --to '0xf8c3b00kCommunity' --message 'Hello, 0xfb!'")
+               .usage("Usage: ./0xfb post --to [ID/username] --message [message]")
                .describe('to', 'ID/username of the target wall')
                .describe('message', 'message to post')
                .string('to', 'message') // treat these two argv as string

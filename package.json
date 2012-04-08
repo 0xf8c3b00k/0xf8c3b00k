@@ -5,14 +5,13 @@
   },
   "maintainers":[
     {
-      "name": "Posh Hsu",
-      // "email": "billblogs@bblogmedia.com",
-      // "web": "http://www.bblogmedia.com",
+      "name": "PoshHsu",
+      "email": "poshenghsu@gmail.com",
     },
     {
       "name": "kk1fff",
       "email": "p@m.patrickz.net",
-    } 
+    }
   ],
   "repository": {
     "type": "git",

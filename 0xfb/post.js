@@ -1,23 +1,39 @@
-var https = require('https');
-var USERCONFIG = require('./config.js').user_config();
+var USERCONFIG  = require('./config.js').user_config(),
+    https       = require('https'),
+    optimist    = require('optimist'),
+    path        = require('path'),
+    querystring = require('querystring');
 
-var post = function(program_option, command_argument) {
+var post = function(program_option, command_argument, raw_argv) {
 
-  if(command_argument.join(' ').trim() === '') {
-    console.log('Oops! Even you are a hacker, you should say something!');
-    process.exit(0);
-  } else {
-    var message = command_argument.join(' ');
-  }
+  var argv = optimist(raw_argv)
+               .usage("Example: ./index.js post --to '0xf8c3b00kCommunity' --message 'Hello, 0xfb!'")
+               .describe('to', 'ID/username of the target wall')
+               .describe('message', 'message to post')
+               .string('to', 'message') // treat these two argv as string
+               .demand('message') // `messsage` is required
+               .default('to', 'me') // post to the user's own wall if
+                                    // `to` is not specified
+               .alias('message', 'm') // --message, -m
+               .alias('to', 't') // --to, -t
+               .argv;
 
   var request_OK = 200;
-  var profile_id = 'me';  // FIXME: why can't we post to others' wall?
+
+  var post_data = querystring.stringify({
+    'access_token': USERCONFIG['fb_auth_token'],
+    'message': argv.message,
+  });
 
   var options = {
     host: 'graph.facebook.com',
     port: 443,
-    path: profile_id + '/feed' + '?access_token=' + USERCONFIG['fb_auth_token'],
-    method: 'POST'
+    path: path.join('/', argv.to, 'feed'),
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Length': post_data.length
+    }
   };
 
   var req = https.request(options, function(res) {
@@ -51,10 +67,10 @@ var post = function(program_option, command_argument) {
     console.log('Problem with request: ' + e.message);
   });
 
-  req.write("message=" + message);
+  req.write(post_data);
   req.end();
 };
 
-exports.run = function(program_option, command_argument) {
-  post(program_option, command_argument);
+exports.run = function(program_option, command_argument, raw_argv) {
+  post(program_option, command_argument, raw_argv);
 }

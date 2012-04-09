@@ -15,7 +15,8 @@ var progCommand = {
   'post' : './post.js',
   // Update photo
   'uploadphoto' : './upload_photo.js',
-  'album' : './album.js'
+  'album' : './album.js',
+  'news': './news.js',
 };
 
 // It is a chance for program to make global setting before and command

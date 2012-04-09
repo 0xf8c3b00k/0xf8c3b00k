@@ -19,7 +19,8 @@ var app_cfg = {
   'fb_auth_scope' : [
     'user_photos',
     'publish_stream',
-    'friends_photos'
+    'friends_photos',
+    'read_stream'
   ],
 
   // Default configure file name

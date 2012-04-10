@@ -1,4 +1,5 @@
 var USERCONFIG  = require('./config.js').user_config(),
+    uploadphoto = require('./upload_photo.js'),
     https       = require('https'),
     optimist    = require('optimist'),
     path        = require('path'),
@@ -6,7 +7,10 @@ var USERCONFIG  = require('./config.js').user_config(),
 
 var post = function(program_option, command_argument, raw_argv) {
 
-  var argv = optimist(raw_argv)
+  // Parse only command arguments, so we can exclude the 'post' token,
+  // any token other then options will be treated as filename, inlcude '-'
+  // token.
+  var argv = optimist(command_argument)
                .usage("Usage: ./0xfb post --to [ID/username] --message [message]")
                .describe('to', 'ID/username of the target wall')
                .describe('message', 'message to post')
@@ -17,6 +21,17 @@ var post = function(program_option, command_argument, raw_argv) {
                .alias('message', 'm') // --message, -m
                .alias('to', 't') // --to, -t
                .argv;
+
+  if (argv['_'].length > 0) {
+    // Contains filenames, handle it with upload.
+    uploadphoto.upload(argv);
+  } else {
+    // Text only, as a status update.
+    doPost(argv);
+  }
+};
+
+var doPost = function(argv) {
 
   var request_OK = 200;
 

@@ -13,9 +13,9 @@ var CONFIG = require('./config.js').app_config();
 var progCommand = {
   // Post message
   'post' : './post.js',
-  // Update photo
-  'uploadphoto' : './upload_photo.js',
+  // Show albums
   'album' : './album.js',
+  // Show news feed.
   'news': './news.js',
 };
 

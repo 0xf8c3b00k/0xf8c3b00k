@@ -37,8 +37,7 @@ var uploadStdin = function(cb, config) {
 
 var uploadToWebsite = function(cb, config, istream, filename) {
 
-  var uploadPath = !config.hasOwnProperty('albumId') ?
-    '/me/photos' : '/' + config['albumId'] + '/photos';
+  var uploadPath = '/' + config['to'] + '/photos';
 
   var multipartBoundary = makeBoundary();
 
@@ -108,63 +107,39 @@ var uploadToWebsite = function(cb, config, istream, filename) {
   });
 };
 
-var upload = function(cb, cfg) {
+var doUpload = function(cb, cfg) {
   // Disable debug message.
   // console.log("config:");
   // console.log(JSON.stringify(cfg));
-
-   if (cfg.hasOwnProperty('filename')) {
-     var count = 0;
-     cfg['filename'].forEach(function(v) {
-       uploadFromFile(function() {
-         count++;
-         if (count == cfg['filename'].length) {
-           cb();
-         }
-       }, v, cfg);
-     });
-   } else {
-     // from standard in.
-     uploadStdin(cb, cfg);
-   }
-}
-
-exports.run = function(progOpt, cmdArgs) {
-  var expecting = 'key';
-  var key = ''
-  var parsed = {};
-  for (var i = 0; i < cmdArgs.length; ++i) {
-    var v = cmdArgs[i];
-    if (expecting == 'key') {
-      if ((v == '--album')
-          || (v == '--msg')
-          || (v == '-m')) {
-        expecting = 'value';
-        key = v;
+  var count = 0;
+  cfg['filename'].forEach(function(v) {
+    var uploadCallback = function() {
+      count++;
+      if (count == cfg['filename'].length) {
+        cb();
       }
-      parsed[v] = '';
-    } else {
-      parsed[key] = v;
-      expecting = 'key';
-    }
-  }
+    };
 
-  var cfg = {};
-  Object.keys(parsed).forEach(function(v) {
-    if (v == '--album') {
-      cfg['albumId'] = parsed[v];
-    } else if (v == '--msg' || v == '-m') {
-      cfg['message'] = parsed[v];
+    console.log('Begin to upload %s.',
+                v == '-' ? 'from stdandard in'
+                         : v);
+
+    // Integrate filename and stdin.
+    if (v == '-') {
+      uploadStdin(uploadCallback, cfg);
     } else {
-      if (cfg.hasOwnProperty('filename')) {
-        cfg['filename'].push(v);
-      } else {
-        cfg['filename'] = [v];
-      }
+      uploadFromFile(uploadCallback, v, cfg);
     }
   });
-  
-  upload.bind(this, function() {
-    process.exit(0);
-  })(cfg);
 }
+
+exports.upload = function(argv) {
+  var cfg = {
+    filename: argv['_'],
+    to: argv['to'],
+    message: argv['message']
+  };
+  doUpload(function() {
+    process.exit(0);
+  }, cfg);
+};

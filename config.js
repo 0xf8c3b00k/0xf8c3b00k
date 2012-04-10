@@ -17,6 +17,7 @@ var app_cfg = {
   'fb_client_id' : '370477596318204',
 
   'fb_auth_scope' : [
+    'user_groups',
     'user_photos',
     'publish_stream',
     'friends_photos',

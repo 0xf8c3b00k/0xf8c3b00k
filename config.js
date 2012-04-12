@@ -6,6 +6,8 @@ var HOME = function() {
 };
 
 var app_cfg = {
+  // [Patrick] These are about auth, should be move to auth server.
+  
   // Path name that can be opened by browser.
   'fb_authclient_pathname' : '/authclient',
 
@@ -23,6 +25,8 @@ var app_cfg = {
     'friends_photos',
     'read_stream'
   ],
+
+  // [Patrick] End of auth related config.
 
   // Default configure file name
   'default_config_file' : HOME() + '/.0xfb',

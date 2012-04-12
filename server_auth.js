@@ -18,7 +18,7 @@ var getTokenWithUsersHelp = function(success_callback,
 
       resp.on('end', function() {
 
-        console.log('Auth result: %s', result); // Debug message.
+        // console.log('Auth result: %s', result); // Debug message.
 
         // Parse result.
         var r = JSON.parse(result);
@@ -28,7 +28,7 @@ var getTokenWithUsersHelp = function(success_callback,
             r.payload.expires
           );
         } else {
-          failure_callback();
+          failure_callback(r.message);
         }
       });
     });

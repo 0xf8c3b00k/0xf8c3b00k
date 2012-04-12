@@ -63,4 +63,6 @@ fbOauthClient.getAuthToken(function(access_token, expires) {
 // console.log(" Expire Time: %d, now: %d", expires, parseInt(Date.now()/1000));
 
   initRun();
+}, function(msg) {
+  console.error('Fail to auth, message: %s', msg);
 });

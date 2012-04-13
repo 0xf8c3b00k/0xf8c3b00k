@@ -11,15 +11,21 @@ var post = function(program_option, command_argument, raw_argv) {
   // any token other then options will be treated as filename, inlcude '-'
   // token.
   var argv = optimist(command_argument)
-               .usage("Usage: ./0xfb post --to [ID/username] --message [message]")
+               .usage("Usage: ./0xfb post --to [ID/username] --link [link] --message [message]")
                .describe('to', 'ID/username of the target wall')
+               .describe('link', 'link to post')
                .describe('message', 'message to post')
-               .string('to', 'message') // treat these two argv as string
-               .demand('message') // `messsage` is required
+               .string('to', 'link', 'message') // treat these argvs as string
+               .check(function (argv) {
+                 if (!('link' in argv) && !('message' in argv) && !(argv['_'].length > 0)) {
+                   throw 'Either link, message, or filename argument is required';
+                 }
+               })
                .default('to', 'me') // post to the user's own wall if
                                     // `to` is not specified
-               .alias('message', 'm') // --message, -m
                .alias('to', 't') // --to, -t
+               .alias('link', 'l') // --link, -t
+               .alias('message', 'm') // --message, -m
                .argv;
 
   if (argv['_'].length > 0) {
@@ -36,8 +42,9 @@ var doPost = function(argv) {
   var request_OK = 200;
 
   var post_data = querystring.stringify({
-    'access_token': USERCONFIG['fb_auth_token'],
+    'link': argv.link,
     'message': argv.message,
+    'access_token': USERCONFIG['fb_auth_token'],
   });
 
   var options = {

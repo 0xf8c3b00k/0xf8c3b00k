@@ -81,7 +81,8 @@ var uploadToWebsite = function(cb, config, istream, filename) {
 
   // Send data section.
   Object.keys(config).forEach(function(v) {
-    if (fieldMapper.hasOwnProperty(v)) {
+    // config[v] may be undefined, for example, 'message' is optional
+    if (fieldMapper.hasOwnProperty(v) && config[v]) {
       req.write('--' + multipartBoundary + '\r\n');
       req.write('Content-Disposition: form-data; name="' + fieldMapper[v] + '"\r\n');
       req.write('\r\n');

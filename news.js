@@ -7,7 +7,7 @@ var doPrintFeed = function(cb, data) {
   var postList = data.data;
   USERCONFIG['fb_prev_to_list'] = {};
 
-  for (var i = 0; i < postList.length; ++i) {
+  for (var i = postList.length - 1; i >= 0; --i) {
     var post = postList[i];
 
     // Record status, started from 1

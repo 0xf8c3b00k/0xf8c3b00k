@@ -13,7 +13,7 @@ var doPrintFeed = function(cb, data) {
     // Record status, started from 1
     USERCONFIG['fb_prev_to_list'][i+1] = post.id;
 
-    console.log('#%d', i+1);
+    console.log('@%d', i+1);
     console.log('From: %s', post.from.name);
 
     // 'type' of a post can be: status, photo, video, link.   
@@ -35,30 +35,25 @@ var doPrintFeed = function(cb, data) {
       console.log('Link: %s', post.link);
     }
     
-    // Collect like, comments and shares
-    if (post.hasOwnProperty('actions')) {
-      var likes = 0,
-          comments = 0,
-          share = 0;
-      var act = post['actions'];
-      for (var a = 0; a < act.length; ++a) {
-        var name = act[a]['name'];
-        if (name == 'Share')
-          share++;
-        else if (name == 'Comment')
-          comments++;
-        else if (name == 'Like')
-          likes++;
+    // Lower Banner: Like, comment, share
+    var lowerBanner = [];
+    var lbMap = {
+      'likes' : 'Like',
+      'comments': 'Comment',
+      'shares': 'Share'
+    };
+
+    for (var j = 0; j < Object.keys(lbMap).length; ++j) {
+      var key = Object.keys(lbMap)[j];
+      if (post.hasOwnProperty(key)) {
+        lowerBanner.push(lbMap[key] + ': ' + post[key]['count']);
       }
-      var outputStrings = [];
-      if (likes > 0)
-        outputStrings.push('Likes: ' + likes);
-      if (comments > 0)
-        outputStrings.push('Comments: ' + comments);
-      if (share > 0)
-        outputStrings.push('Share: ' + share);
-      console.log(outputStrings.join(' '));
     }
+    if (lowerBanner.length > 0) {
+      console.log(lowerBanner.join(', '));
+    }      
+    // End of lower banner.
+
     console.log('--'); // End
   }
 

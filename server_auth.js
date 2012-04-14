@@ -1,8 +1,15 @@
 var https = require('https');
 var CONFIG = require('./config.js').app_config();
 
+var defaultUrlCallback = function(success_callback, url) {
+  console.log("Use browser to open: ");
+  console.log("  " + url);
+  success_callback();
+};
+
 var getTokenWithUsersHelp = function(success_callback,
-                                     failure_callback) {
+                                     failure_callback, 
+                                     url_callback) {
   var token = '';
 
   // Long lived http connection.
@@ -43,23 +50,33 @@ var getTokenWithUsersHelp = function(success_callback,
       token = token + d.toString('utf8');
     });
     resp.on('end', function() {
-      console.log("Use browser to open: ");
-      console.log("  https://zeroxf8c3b00k.herokuapp.com/" + 
-                  "auth_client_request?t="+token);
-      
-      // Wait for result.
-      waitServerResult();
+      url_callback = url_callback || defaultUrlCallback;
+      url_callback(
+        waitServerResult, // Wait for result.
+        "https://zeroxf8c3b00k.herokuapp.com/auth_client_request?t=" + token
+      )
     });
   });
-
 }
 
+// url_callback is a function: function(success_callback, url)
+// It will be issued after auth url is generated. May print it to console, 
+// generate QRcode.... or sth....
+// this function should call success_callback
+// Ex:
+// function(success_callback, url) {
+//     ... do sth with url ...
+//   success_callback();
+// }
 exports.getAuthToken = function(success_callback,
-                                failure_callback) {
+                                failure_callback,
+                                isForced,
+                                url_callback) {
   var USER_CONFIG = require('./config.js').user_config();
 
   if (USER_CONFIG.hasOwnProperty('fb_auth_token')
-      && USER_CONFIG['fb_auth_token_expire'] > Date.now()/1000) {
+      && USER_CONFIG['fb_auth_token_expire'] > Date.now()/1000
+      && !isForced) {
     // Success callback
     success_callback(USER_CONFIG['fb_auth_token'],
                      USER_CONFIG['fb_auth_token_expire']);
@@ -76,6 +93,7 @@ exports.getAuthToken = function(success_callback,
         success_callback(USER_CONFIG['fb_auth_token'],
                          USER_CONFIG['fb_auth_token_expire']);
       },
-      failure_callback);
+      failure_callback,
+      url_callback);
   }
 };

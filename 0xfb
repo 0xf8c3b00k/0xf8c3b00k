@@ -19,12 +19,6 @@ var progCommand = {
   'wall': './wall.js',
 };
 
-// It is a chance for program to make global setting before and command
-// is issued. Command will be executed right after this step.
-var handleSetting = function(progOpt, command, cmdArg) {
-  // So far it's empty XD.
-}
-
 // Parse command line, collect program option, command, command argrment.
 var initRun = function() {
   // [TODO] we can use Optimist to simplify command line arguments
@@ -32,37 +26,35 @@ var initRun = function() {
   //          * https://github.com/substack/node-optimist
   //          * http://docs.nodejitsu.com/articles/command-line/how-to-parse-command-line-arguments
 
-  var program_option = [];
   var command = '';
-  var command_argument = [];
-
-  // [TODO Patrick] Here I assume there is no program options, so we just
-  // use that first argument as command
+  var cmd_argv = [];
 
   command = process.argv[2];
-  command_argument = process.argv.slice(3);
+  cmd_argv = process.argv.slice(3);
 
   if (!progCommand.hasOwnProperty(command)) {
     // Invalid command.
+    console.log('Available subcommand: %s',
+                Object.keys(progCommand).join(', '));
     process.exit(1);
   }
 
-  handleSetting(program_option, command, command_argument);
-
-  // Go
-  require(progCommand[command]).run(program_option, command_argument, process.argv);
-  // [NOTE] the third param: process.argv is added to let Optimist
-  //        to get raw argv and parse correct inside post.js
-  // [TODO] we should find a way to show global Usage infomation at runtime
+  // Go. Here we are already got the command (in command).
+  // If there's something must be processed before getting token.
+  require('./server_auth.js').getAuthToken(
+    function(access_token, expires) {
+      require(progCommand[command]).run([], cmd_argv, process.argv);
+    },
+    function(msg) {
+      console.error('Fail to auth, message: %s', msg);
+    },
+    false,  // Force?
+    function(succ_cb, url) {
+      console.log(url);
+      succ_cb();
+    }
+  );
 }
 
-// *** Start with fetching access token ***
-var fbOauthClient = require('./server_auth.js');
-fbOauthClient.getAuthToken(function(access_token, expires) {
-// console.log(" Access token: %s", access_token);
-// console.log(" Expire Time: %d, now: %d", expires, parseInt(Date.now()/1000));
-
-  initRun();
-}, function(msg) {
-  console.error('Fail to auth, message: %s', msg);
-});
+// *** Start with initRun() ***
+initRun();

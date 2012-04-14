@@ -2,6 +2,7 @@ var USERCONFIG = require('./config.js').user_config();
 var https = require('https');
 var optimist = require('optimist');
 
+// -----------------------------------------------------------------------------
 
 var doPrintFeed = function(cb, data) {
   var postList = data.data;
@@ -95,24 +96,14 @@ var end = function() {
   process.exit(0);
 };
 
-
-exports.show = function(argv) {
-  getFeed(doPrintFeed.bind(this, end), end, argv['to']);
+exports.showUserNews = function(argv) {
+  getFeed(doPrintFeed.bind(this, end), end);
 };
 
-exports.run = function(progOpts, cmdArgs, rawArgv) {
-
-//    var argv = optimist(rawArgv)
-//                 .usage("Usage: ./0xfb post --event [Article id|#number] --who [Username|User id]")
-//                 .describe('to', 'ID/username of the target wall, or #-started pr')
-//                 .describe('message', 'message to post')
-//                 .string('to', 'message') // treat these two argv as string
-//                 .demand('message') // `messsage` is required
-//                 .default('to', 'me') // post to the user's own wall if
-//                                      // `to` is not specified
-//                 .alias('message', 'm') // --message, -m
-//                 .alias('to', 't') // --to, -t
-//                 .argv;
-
-  getFeed(doPrintFeed.bind(this, end), end);
+exports.run = function(progOpts, cmdArgv, rawArgv) {
+  var argv = optimist(cmdArgv).
+    usage("Usage: ./0xfb wall [ID/username]").
+    argv;
+  
+  getFeed(doPrintFeed.bind(this, end), end, argv['_'][0] || 'me');
 };

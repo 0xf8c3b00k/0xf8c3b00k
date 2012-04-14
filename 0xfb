@@ -16,7 +16,7 @@ var progCommand = {
   // Show albums
   'album' : './album.js',
   // Show news feed.
-  'news': './news.js',
+  'wall': './wall.js',
 };
 
 // It is a chance for program to make global setting before and command

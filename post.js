@@ -1,6 +1,6 @@
 var USERCONFIG  = require('./config.js').user_config(),
     uploadphoto = require('./upload_photo.js'),
-    news        = require('./news.js'),
+    wall        = require('./wall.js'),
     https       = require('https'),
     optimist    = require('optimist'),
     path        = require('path'),
@@ -32,7 +32,7 @@ var post = function(program_option, command_argument, raw_argv) {
     doPost(argv);
   } else {
     // No message, so we show the news.
-    news.show(argv);
+    wall.showUserNews(argv);
   }
 };
 

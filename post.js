@@ -17,11 +17,6 @@ var post = function(program_option, command_argument, raw_argv) {
                .describe('link', 'link to post')
                .describe('message', 'message to post')
                .string('to', 'link', 'message') // treat these argvs as string
-               .check(function (argv) {
-                 if (!('link' in argv) && !('message' in argv) && !(argv['_'].length > 0)) {
-                   throw 'Either link, message, or filename argument is required';
-                 }
-               })
                .default('to', 'me') // post to the user's own wall if
                                     // `to` is not specified
                .alias('to', 't') // --to, -t

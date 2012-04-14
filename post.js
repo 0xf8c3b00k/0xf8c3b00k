@@ -1,5 +1,6 @@
 var USERCONFIG  = require('./config.js').user_config(),
     uploadphoto = require('./upload_photo.js'),
+    news        = require('./news.js'),
     https       = require('https'),
     optimist    = require('optimist'),
     path        = require('path'),
@@ -15,7 +16,6 @@ var post = function(program_option, command_argument, raw_argv) {
                .describe('to', 'ID/username of the target wall')
                .describe('message', 'message to post')
                .string('to', 'message') // treat these two argv as string
-               .demand('message') // `messsage` is required
                .default('to', 'me') // post to the user's own wall if
                                     // `to` is not specified
                .alias('message', 'm') // --message, -m
@@ -25,9 +25,12 @@ var post = function(program_option, command_argument, raw_argv) {
   if (argv['_'].length > 0) {
     // Contains filenames, handle it with upload.
     uploadphoto.upload(argv);
-  } else {
+  } else if (argv.hasOwnProperty('message')) {
     // Text only, as a status update.
     doPost(argv);
+  } else {
+    // No message, so we show the news.
+    news.show(argv);
   }
 };
 

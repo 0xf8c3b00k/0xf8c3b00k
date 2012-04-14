@@ -2,8 +2,9 @@
   "name": "0xfb",
   "version": "0.0.1",
   "dependencies": {
+    'async': '0.1.8'
   },
-  "maintainers":[
+  "maintainers": [
     {
       "name": "PoshHsu",
       "email": "poshenghsu@gmail.com",

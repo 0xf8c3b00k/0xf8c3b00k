@@ -59,7 +59,7 @@ var doPrintFeed = function(cb, data) {
 
 };
 
-var printFeed = function(suc_cb, fail_cb, id) {
+var getFeed = function(suc_cb, fail_cb, id) {
   var reqPath = id ? '/'+id+'/feed' : '/me/home';
   https.get({
     host: 'graph.facebook.com',
@@ -91,10 +91,16 @@ var printFeed = function(suc_cb, fail_cb, id) {
   });
 };
 
+var end = function() {
+  process.exit(0);
+};
+
+
+exports.show = function(argv) {
+  getFeed(doPrintFeed.bind(this, end), end, argv['to']);
+};
+
 exports.run = function(progOpts, cmdArgs, rawArgv) {
-  var end = function() {
-    process.exit(0);
-  };
 
 //    var argv = optimist(rawArgv)
 //                 .usage("Usage: ./0xfb post --event [Article id|#number] --who [Username|User id]")
@@ -108,5 +114,5 @@ exports.run = function(progOpts, cmdArgs, rawArgv) {
 //                 .alias('to', 't') // --to, -t
 //                 .argv;
 
-  printFeed(doPrintFeed.bind(this, end), end);
+  getFeed(doPrintFeed.bind(this, end), end);
 };

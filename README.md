@@ -1,4 +1,4 @@
-# 0xf8c3b00k
+# 0xf8c3b00k - Command line Facebook client.
 
 A Facebook client for hackers.
 

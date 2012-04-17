@@ -46,7 +46,7 @@ var doPrintFeed = function(cb, data) {
 
     for (var j = 0; j < Object.keys(lbMap).length; ++j) {
       var key = Object.keys(lbMap)[j];
-      if (post.hasOwnProperty(key) && post[key] > 0) {
+      if (post.hasOwnProperty(key) && post[key]['count'] > 0) {
         lowerBanner.push(lbMap[key] + ': ' + post[key]['count']);
       }
     }

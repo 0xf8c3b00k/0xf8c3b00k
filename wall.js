@@ -19,9 +19,9 @@ var doPrintFeed = function(cb, data) {
 
     // 'type' of a post can be: status, photo, video, link.   
     var type = post['type'];
-    console.log('Type: %s', type);
+    // console.log('Type: %s', type);
     if (type == 'status') {
-      console.log(post.message);
+      console.log(post.message || post.story);
     } else if (type == 'photo') {
       console.log('Photo Link: %s', post.link);
     } else if (type == 'video') {
@@ -46,7 +46,7 @@ var doPrintFeed = function(cb, data) {
 
     for (var j = 0; j < Object.keys(lbMap).length; ++j) {
       var key = Object.keys(lbMap)[j];
-      if (post.hasOwnProperty(key)) {
+      if (post.hasOwnProperty(key) && post[key] > 0) {
         lowerBanner.push(lbMap[key] + ': ' + post[key]['count']);
       }
     }

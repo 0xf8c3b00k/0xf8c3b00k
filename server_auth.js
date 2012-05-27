@@ -15,7 +15,7 @@ var getTokenWithUsersHelp = function(success_callback,
   // Long lived http connection.
   var waitServerResult = function() {
     https.get({
-      'host': 'zeroxf8c3b00k.herokuapp.com',
+      'host': CONFIG['app_server'],
       'path': '/0xfb_client_wait?t=' + token
     }, function(resp) {
       var result = '';

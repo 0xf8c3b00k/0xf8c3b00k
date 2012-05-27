@@ -17,6 +17,10 @@ var progCommand = {
   'album' : './album.js',
   // Show news feed.
   'wall': './wall.js',
+  // Show single message
+  'comment': './comment.js',
+  // Watch event, haven't don't yet.
+  // 'watch': './watch.js'
 };
 
 // Parse command line, collect program option, command, command argrment.

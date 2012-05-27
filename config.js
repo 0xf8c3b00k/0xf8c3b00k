@@ -19,11 +19,12 @@ var app_cfg = {
   'fb_client_id' : '370477596318204',
 
   'fb_auth_scope' : [
-    'user_groups',
-    'user_photos',
-    'publish_stream',
     'friends_photos',
-    'read_stream'
+    'publish_actions',
+    'publish_stream',
+    'read_stream',
+    'user_groups',
+    'user_photos'
   ],
 
   // [Patrick] End of auth related config.
@@ -40,7 +41,9 @@ var app_cfg = {
   'program_options' : {
     '--website' : true,  // Example
     '--silence' : false
-  }
+  },
+
+  'app_server' : 'zeroxf8c3b00k.herokuapp.com'
 
 };
 

@@ -20,7 +20,9 @@ var progCommand = {
   // Show single message
   'comment': './comment.js',
   // Watch event, haven't don't yet.
-  // 'watch': './watch.js'
+  // 'watch': './watch.js',
+  // Show friend list
+  'friends': './friends.js'
 };
 
 // Parse command line, collect program option, command, command argrment.

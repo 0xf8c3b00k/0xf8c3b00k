@@ -7,7 +7,7 @@ var HOME = function() {
 
 var app_cfg = {
   // [Patrick] These are about auth, should be move to auth server.
-  
+
   // Path name that can be opened by browser.
   'fb_authclient_pathname' : '/authclient',
 
@@ -24,7 +24,12 @@ var app_cfg = {
     'publish_stream',
     'read_stream',
     'user_groups',
-    'user_photos'
+    'user_photos',
+    'read_stream',
+    'read_friendlists',
+    'publish_checkins',
+    'user_status',
+    'friends_status'
   ],
 
   // [Patrick] End of auth related config.
@@ -34,9 +39,9 @@ var app_cfg = {
 
   // Available program options
   // 'option name' : (true if it has a value)
-  // Ex: 
+  // Ex:
   // If you expect user to type "-p 60"
-  // you should set 
+  // you should set
   //   '-p' : true
   'program_options' : {
     '--website' : true,  // Example

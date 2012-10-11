@@ -61,7 +61,7 @@ var doPrintFeed = function(cb, data) {
 };
 
 var getFeed = function(suc_cb, fail_cb, id) {
-  var reqPath = id ? '/'+id+'/feed' : '/me/home';
+  var reqPath = (id != "all") ? '/'+id+'/feed' : '/me/home';
   https.get({
     host: 'graph.facebook.com',
     path: reqPath + '?access_token=' + USERCONFIG['fb_auth_token'],
@@ -104,6 +104,6 @@ exports.run = function(progOpts, cmdArgv, rawArgv) {
   var argv = optimist(cmdArgv).
     usage("Usage: ./0xfb wall [ID/username]").
     argv;
-  var action = (argv.a) ? "" :  argv['_'][0] || 'me';
+  var action = (argv.a) ? "all" :  argv['_'][0] || 'me';
   getFeed(doPrintFeed.bind(this, end), end, action);
 };

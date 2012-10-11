@@ -17,7 +17,7 @@ var doPrintFeed = function(cb, data) {
     console.log('@%d', i+1);
     console.log('From: %s', post.from.name);
 
-    // 'type' of a post can be: status, photo, video, link.   
+    // 'type' of a post can be: status, photo, video, link.
     var type = post['type'];
     // console.log('Type: %s', type);
     if (type == 'status') {
@@ -35,7 +35,7 @@ var doPrintFeed = function(cb, data) {
         console.log('Description:\n%s', post.description);
       console.log('Link: %s', post.link);
     }
-    
+
     // Lower Banner: Like, comment, share
     var lowerBanner = [];
     var lbMap = {
@@ -52,7 +52,7 @@ var doPrintFeed = function(cb, data) {
     }
     if (lowerBanner.length > 0) {
       console.log(lowerBanner.join(', '));
-    }      
+    }
     // End of lower banner.
 
     console.log('--'); // End
@@ -61,7 +61,7 @@ var doPrintFeed = function(cb, data) {
 };
 
 var getFeed = function(suc_cb, fail_cb, id) {
-  var reqPath = id ? '/'+id+'/feed' : '/me/home';
+  var reqPath = (id != "all") ? '/'+id+'/feed' : '/me/home';
   https.get({
     host: 'graph.facebook.com',
     path: reqPath + '?access_token=' + USERCONFIG['fb_auth_token'],
@@ -104,6 +104,6 @@ exports.run = function(progOpts, cmdArgv, rawArgv) {
   var argv = optimist(cmdArgv).
     usage("Usage: ./0xfb wall [ID/username]").
     argv;
-  
-  getFeed(doPrintFeed.bind(this, end), end, argv['_'][0] || 'me');
+  var action = (argv.a) ? "all" :  argv['_'][0] || 'me';
+  getFeed(doPrintFeed.bind(this, end), end, action);
 };

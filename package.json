@@ -2,16 +2,20 @@
   "name": "0xfb",
   "version": "0.0.1",
   "dependencies": {
-    'async': '0.1.8'
+    "async": "0.1.8"
   },
   "maintainers": [
     {
       "name": "PoshHsu",
-      "email": "poshenghsu@gmail.com",
+      "email": "poshenghsu@gmail.com"
     },
     {
-      "name": "kk1fff",
-      "email": "p@m.patrickz.net",
+      "name": "Patrick Wang",
+      "email": "kk1fff@patrickz.net"
+    },
+    {
+      "name": "Terrence Tang",
+      "email": "terrence.tang810@gmail.com"
     }
   ],
   "repository": {
